@@ -12,6 +12,6 @@ var map = new OSMBuildings({
 
 map.addMapTiles('https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png');
 map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/dixw8kmb/tile/{z}/{x}/{y}.json');
-map.addMarker({ latitude: 50.949650, longitude: 6.933180, altitude:30}, {color: 'blue'});
+map.addMarker({latitude: 50.949650, longitude: 6.933180, altitude:30, color: 'red'});
 
 
