@@ -34,7 +34,13 @@ def Sphere(location, R, H_min, H_max):
 	return np.asarray(path)
 
 def Plane(location, P1, P2, P3, H_min, H_max):	
+	P1 = lla2ecef(P1[0], P1[1], P1[2]) 
+	P2 = lla2ecef(P2[0], P2[1], P2[2]) 
+	P3 = lla2ecef(P3[0], P3[1], P3[2]) 	
 	R = np.amax([np.linalg.norm(location-P1), np.linalg.norm(location-P2), np.linalg.norm(location-P3)])
+	P1 = P1 - location
+	P2 = P2 - location
+	P3 = P3 - location
 	path = []
 	for i in range(d):
 		for j in range(d):
@@ -51,11 +57,10 @@ def Plane(location, P1, P2, P3, H_min, H_max):
 
 location = [50.949650, 6.933180, 30] 
 location = lla2ecef(location[0], location[1], location[2]) 
-
-print (location)
+#print (location)
 
 xyz = Sphere(location, 10.0, location[2]-5, location[2]+8)
-print (xyz)
+#print (xyz)
 lla = ecef2lla(xyz)
 
 f = open('path.csv', 'wt')
