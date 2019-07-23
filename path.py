@@ -25,8 +25,8 @@ def Sphere(location, R, H_min, H_max):
 	path = []
 	for i in range(d):
 		for j in range(d):
-			if R*math.cos(np.pi/d*i)+location[2] > H_min:
-				if R*math.cos(np.pi/d*i)+location[2] < H_max:
+			if R*math.cos(np.pi/d*i) > H_min:
+				if R*math.cos(np.pi/d*i) < H_max:
 					p = [R*math.sin(np.pi/d*i)*math.cos(2*np.pi/d*j)+location[0], 
 					     R*math.sin(np.pi/d*i)*math.sin(2*np.pi/d*j)+location[1],
         	       	        	     R*math.cos(np.pi/d*i)+location[2]]
@@ -45,8 +45,8 @@ def Plane(location, P1, P2, P3, H_min, H_max):
 	for i in range(d):
 		for j in range(d):
 			for k in range(d):
-				if R/d*k+location[2] > H_min:
-					if R/d*k+location[2] < H_max:
+				if R/d*k > H_min:
+					if R/d*k < H_max:
 						M = Np.array([[R/d*i-P1[0], R/d*j-P1[1], R/d*k-P1[2]],
 							      [R/d*i-P2[0], R/d*j-P2[1], R/d*k-P2[2]],
 							      [R/d*i-P3[0], R/d*j-P3[1], R/d*k-P3[2]]])
@@ -55,11 +55,11 @@ def Plane(location, P1, P2, P3, H_min, H_max):
 							path.append(p)
 	return np.asarray(path)
 
-location = [50.949650, 6.933180, 30] 
+location = [50.949650, 6.933180, 30] #[lat, lon, alt] 
 location = lla2ecef(location[0], location[1], location[2]) 
 #print (location)
 
-xyz = Sphere(location, 10.0, location[2]-5, location[2]+8)
+xyz = Sphere(location, 10.0, -5, +8)
 #print (xyz)
 lla = ecef2lla(xyz)
 
