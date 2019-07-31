@@ -6,7 +6,7 @@ import math
 import csv
 
 
-d = 20
+d = 40
 #lla = [lat, lon, alt] #[degree, degree, meter]
 #ecef = [x, y, z] #[meter, meter, meter]
 					
@@ -17,7 +17,7 @@ def Cylinder(location, R, H_min, H_max):
 		for k in range(d):
 			p = [R*math.cos(2*np.pi/d*i)+location[0], 
 			     R*math.sin(2*np.pi/d*i)+location[1],
-                             (H_max-H_min)*k + H_min+location[2]]
+                             (H_max-H_min)/d*k + H_min+location[2]]
 			path.append(p)
 	return np.asarray(path)
 
@@ -33,11 +33,11 @@ def Sphere(location, R, H_min, H_max):
 					path.append(p)
 	return np.asarray(path)
 
-def Plane(location, P1, P2, P3, H_min, H_max):	
+def Plane(location, P1, P2, H_min, H_max):	
 	P1 = lla2ecef(P1[0], P1[1], P1[2]) 
 	P2 = lla2ecef(P2[0], P2[1], P2[2]) 
-	P3 = lla2ecef(P3[0], P3[1], P3[2]) 	
-	R = np.amax([np.linalg.norm(location-P1), np.linalg.norm(location-P2), np.linalg.norm(location-P3)])
+	P3 = [(P1[0]+P2[0])/2, (P1[1]+P2[1])/2, (P1[3]+P2[3])/2+20]	
+	R = np.amax([np.linalg.norm(location[0:2]-P1[0:2],'fro'), np.linalg.norm(location[0:2]-P2[0:2])],'fro')
 	P1 = P1 - location
 	P2 = P2 - location
 	P3 = P3 - location
@@ -56,10 +56,10 @@ def Plane(location, P1, P2, P3, H_min, H_max):
 	return np.asarray(path)
 
 location = [50.949650, 6.933180, 30] #[lat, lon, alt] 
-location = lla2ecef(location[0], location[1], location[2]) 
-#print (location)
+location_xyz = lla2ecef(location[0], location[1], location[2]) 
+#print (location_xyz)
 
-xyz = Sphere(location, 10.0, -5, +8)
+xyz = Sphere(location_xyz, 20.0, -2, +20)
 #print (xyz)
 lla = ecef2lla(xyz)
 
@@ -67,18 +67,20 @@ f = open('path.csv', 'wt')
 writer = csv.writer(f)
 writer.writerow( ('lat', 'lon', 'alt') )
 for i in range(len(lla[0])):
-        writer.writerow( (lla[0][i], lla[1][i], lla[2][i]) )
+        writer.writerow((lla[0][i], lla[1][i], lla[2][i]))
 f.close()
 
 for i in range(len(lla[0])):
+	print ('lat', 'lon', 'alt')
 	print (lla[0][i], lla[1][i], lla[2][i])
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(xyz[:,0], xyz[:,1], xyz[:,2])
+ax.scatter(xyz[:,0], xyz[:,1], xyz[:,2], s=10, marker='o')
+ax.scatter(location_xyz[0], location_xyz[1], location_xyz[2], s=50, marker='*')
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
-
 plt.show()
+
 
